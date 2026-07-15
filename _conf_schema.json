@@ -1,0 +1,5 @@
+{
+  "initial_coins": {"type": "int", "description": "新玩家初始夜市币", "default": 50},
+  "daily_coins": {"type": "int", "description": "每日签到夜市币", "default": 20},
+  "event_coins": {"type": "int", "description": "逛夜市获得的基础夜市币", "default": 5}
+}

@@ -1,0 +1,8 @@
+name: astrbot_plugin_ai_night_market
+display_name: AI 夜市
+desc: 聊天驱动的夜市经营游戏，包含点单、砍价、食材收集和摊位升级。
+short_desc: 和 AI 摊主一起逛夜市、做生意、升级自己的小摊。
+version: 0.1.0
+author: 阿栈
+repo: https://github.com/Yussica1026/ai-night-market-
+astrbot_version: ">=4.22.3,<5"
