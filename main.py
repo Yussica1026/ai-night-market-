@@ -5,7 +5,7 @@ from astrbot.api import AstrBotConfig
 from astrbot.api.event import AstrMessageEvent, filter
 from astrbot.api.star import Context, Star
 from astrbot.core.utils.astrbot_path import get_astrbot_data_path
-from .market_data import EVENTS, STALL_LOOKS, STALLS, UPGRADES, market_overview
+from .market_data import EVENTS, STALL_LOOKS, STALLS, UPGRADES, market_overview, npc_overview
 from .storage import NightMarketDatabase
 
 
@@ -57,6 +57,20 @@ class AINightMarket(Star):
         """查看下一阶段订单目标。"""
         count=await self.database.order_count(self.user(event));target=((count//5)+1)*5
         yield event.plain_result(f"夜市订单：{count} 单。\n下一目标：完成 {target} 单订单，解锁一段摊主小故事。")
+
+    @filter.command("夜市人物")
+    async def npcs(self,event:AstrMessageEvent):
+        """查看夜市 NPC 摊主。"""
+        yield event.plain_result("夜市人物：\n"+npc_overview())
+
+    @filter.command("夜市交谈")
+    async def talk(self,event:AstrMessageEvent,stall:str):
+        """和指定摊主交谈，例如 /夜市交谈 月光糖水铺。"""
+        if stall not in STALLS:
+            yield event.plain_result("没有这个摊位。")
+            return
+        info=STALLS[stall]
+        yield event.plain_result(f"【{info['owner']}】{info['line']}\n{info['profile']}")
 
     @filter.llm_tool(name="visit_night_market")
     async def llm_visit(self,event:AstrMessageEvent,note:str=""):
