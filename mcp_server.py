@@ -2,8 +2,12 @@
 import asyncio, os, random
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
-from market_data import STALLS, market_overview
-from storage import NightMarketDatabase
+try:
+    from .market_data import STALLS, market_overview
+    from .storage import NightMarketDatabase
+except ImportError:
+    from market_data import STALLS, market_overview
+    from storage import NightMarketDatabase
 mcp=FastMCP("AI 夜市",json_response=True)
 database=NightMarketDatabase(Path(os.environ.get("NIGHT_MARKET_DATA_DIR",Path.home()/".ai-night-market"))/"market.sqlite3",50)
 @mcp.tool()

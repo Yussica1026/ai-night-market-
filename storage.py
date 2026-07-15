@@ -59,3 +59,9 @@ class NightMarketDatabase:
     def _profile(self,user):
         with closing(self._connect()) as conn,conn:
             self._player(conn,user);coins,level,favor=conn.execute("SELECT coins,stall_level,favor FROM players WHERE user_id=?",(user,)).fetchone();items=conn.execute("SELECT item,amount FROM inventory WHERE user_id=?",(user,)).fetchall();return coins,level,favor,items
+
+    async def order_count(self,user): return await self._run(self._order_count,user)
+    def _order_count(self,user):
+        with closing(self._connect()) as conn,conn:
+            self._player(conn,user)
+            return conn.execute("SELECT COALESCE(SUM(amount),0) FROM orders WHERE user_id=?",(user,)).fetchone()[0]
