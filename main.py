@@ -81,7 +81,7 @@ class AINightMarket(Star):
         """
         stall=random.choice(list(STALLS));info=STALLS[stall]
         coins=await self.database.visit(self.user(event),info['ingredient'],self.number("event_coins",5))
-        yield event.plain_result(f"来到【{stall}】。{info['line']}\n获得 {info['ingredient']}，当前夜市币：{coins}。")
+        return event.plain_result(f"来到【{stall}】。{info['line']}\n获得 {info['ingredient']}，当前夜市币：{coins}。")
 
     @filter.llm_tool(name="order_night_market")
     async def llm_order(self,event:AstrMessageEvent,stall:str,item:str):
@@ -92,10 +92,9 @@ class AINightMarket(Star):
             item(string): 菜品或商品名称。
         """
         if stall not in STALLS or item not in STALLS[stall]['menu']:
-            yield event.plain_result("菜单不存在。")
-            return
+            return event.plain_result("菜单不存在。")
         ok,coins=await self.database.order(self.user(event),stall,item,STALLS[stall]['menu'][item])
-        yield event.plain_result(f"{'点单成功：'+item+'。' if ok else '夜市币不足。'}当前夜市币：{coins}。")
+        return event.plain_result(f"{'点单成功：'+item+'。' if ok else '夜市币不足。'}当前夜市币：{coins}。")
 
     @filter.llm_tool(name="night_market_profile")
     async def llm_profile(self,event:AstrMessageEvent,note:str=""):
@@ -105,7 +104,7 @@ class AINightMarket(Star):
             note(string): 可选的状态查询说明。
         """
         coins,level,favor,items=await self.database.profile(self.user(event))
-        yield event.plain_result(f"夜市币：{coins}\n摊位：Lv.{level}｜{STALL_LOOKS[level]}\n好感：{favor}\n食材："+("、".join(f"{name}×{amount}" for name,amount in items) or "暂无"))
+        return event.plain_result(f"夜市币：{coins}\n摊位：Lv.{level}｜{STALL_LOOKS[level]}\n好感：{favor}\n食材："+("、".join(f"{name}×{amount}" for name,amount in items) or "暂无"))
 
     @filter.llm_tool(name="night_market_menu")
     async def llm_menu(self,event:AstrMessageEvent,note:str=""):
@@ -114,4 +113,4 @@ class AINightMarket(Star):
         Args:
             note(string): 可选的菜单查询说明。
         """
-        yield event.plain_result(market_overview())
+        return event.plain_result(market_overview())
